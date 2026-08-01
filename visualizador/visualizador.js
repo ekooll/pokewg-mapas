@@ -71,8 +71,15 @@ let propostas = new Map(); // id -> 'top' | 'bottom' | 'mid'
 // visivel, a posicao da sonda ou o tick de animacao de 250ms)
 const mapCv = document.createElement('canvas');
 const mctx = mapCv.getContext('2d');
+// SEGUNDO OFFSCREEN — so pro andar de cima (telhado e parede do pavimento superior).
+// Mesma janela e mesmo cache-key do mapCv; a unica diferenca e QUANDO e colado na
+// tela: depois da fila (FASE 3.5), nao antes (FASE 2). E' isso que faz o predio
+// cobrir o personagem em vez de ficar sempre atras dele.
+const topCv = document.createElement('canvas');
+const tctx = topCv.getContext('2d');
 let chaveCache = '', mapOx = 0, mapOy = 0;
 let objQ = [];  // objetos e topos que NAO vao pro offscreen: entram na fila y-ordenada
+let topQ = [];  // a mesma coisa, mas do andar de cima: fila propria, canvas proprio
 let dbgQ = [];  // mesma lista, mas com TUDO (inclusive chao/bottom), so pros overlays
 
 const tela = document.getElementById('tela');
@@ -354,7 +361,7 @@ function quadro(a, agora, congelar) {
 }
 
 // desenha no OFFSCREEN (chao e bottom: nunca cobrem ninguem)
-function blit(id, tx, ty, tz, ex, agora, congelar) {
+function blit(id, tx, ty, tz, ex, agora, congelar, destino) {
   if (!id || IGNORE.has(id)) return;
   const a = assets[id];
   if (!a) return;
@@ -362,7 +369,7 @@ function blit(id, tx, ty, tz, ex, agora, congelar) {
   const pg = paginasImg.get(f.page);
   if (!pg) return;
   const r = retangulo(id, tx, ty, tz, ex);
-  mctx.drawImage(pg, f.x, f.y, f.w, f.h, r.x, r.y, f.w, f.h);
+  (destino || mctx).drawImage(pg, f.x, f.y, f.w, f.h, r.x, r.y, f.w, f.h);
 }
 
 // espelho do blit desenhando DIRETO NA TELA — usado por quem entra na fila
@@ -389,9 +396,15 @@ function blitTela(id, tx, ty, tz, ex, agora) {
 // os 296 ids resolve a arara da loja de roupas - sem tocar em uma linha de codigo.
 function desenharTile(t, agora, depurar) {
   const tx = t[0], ty = t[1], tz = t[2];
+  // ANDAR DE CIMA: telhado e parede do pavimento superior. Tudo deste tile vai
+  // pro segundo offscreen, que e colado DEPOIS da fila — assim o predio cobre o
+  // personagem em vez de ser coberto por ele.
+  const cima = tz < GZ;
+  const dest = cima ? tctx : mctx;
+
   if (t[3] && !IGNORE.has(t[3])) {
-    blit(t[3], tx, ty, tz, 0, agora, true); // chao congelado no frame 0 (terra/agua nao anima aqui)
-    if (depurar) dbgQ.push({ id: t[3], tx, ty, tz, ex: 0, banda: 'chao' });
+    blit(t[3], tx, ty, tz, 0, agora, true, dest); // chao congelado no frame 0 (terra/agua nao anima aqui)
+    if (depurar) dbgQ.push({ id: t[3], tx, ty, tz, ex: 0, banda: cima ? 'topo' : 'chao' });
   }
   const itens = (t[4] || []).map((i) => i[0]).filter((id) => id && !IGNORE.has(id));
   const baixo = itens.filter((id) => BOTTOM.has(id));
@@ -399,8 +412,26 @@ function desenharTile(t, agora, depurar) {
   const meio = itens.filter((id) => !BOTTOM.has(id) && !TOP.has(id));
 
   for (const id of baixo) {
-    blit(id, tx, ty, tz, 0, agora, true);
-    if (depurar) dbgQ.push({ id, tx, ty, tz, ex: 0, banda: 'offscreen' });
+    blit(id, tx, ty, tz, 0, agora, true, dest);
+    if (depurar) dbgQ.push({ id, tx, ty, tz, ex: 0, banda: cima ? 'topo' : 'offscreen' });
+  }
+
+  if (cima) {
+    // mid e top do andar de cima entram numa FILA PROPRIA, com a mesma regra da
+    // de baixo (ty + prioridade), desenhada no canvas do telhado. Sem essa fila,
+    // a cumeeira do Centro Pokemon sai fragmentada em blocos — ela precisa de
+    // ordenacao por ty igual a do chao; o que muda e so em qual canvas ela cai.
+    let e = 0;
+    for (const id of meio) {
+      topQ.push({ id, tx, ty, tz, ex: e, p: P_MID });
+      if (depurar) dbgQ.push({ id, tx, ty, tz, ex: e, banda: 'topo' });
+      e = Math.min(24, e + (elev[id] || 0));
+    }
+    for (const id of topos) {
+      topQ.push({ id, tx, ty, tz, ex: e, p: P_TOP });
+      if (depurar) dbgQ.push({ id, tx, ty, tz, ex: e, banda: 'topo' });
+    }
+    return;
   }
 
   if (tz > GZ) {
@@ -540,10 +571,16 @@ function desenhar(agora) {
   if (chave !== chaveCache) {
     if (mapCv.width !== cols) mapCv.width = cols;
     if (mapCv.height !== linhas) mapCv.height = linhas;
+    if (topCv.width !== cols) topCv.width = cols;
+    if (topCv.height !== linhas) topCv.height = linhas;
     mctx.setTransform(1, 0, 0, 1, -ox, -oy);
+    tctx.setTransform(1, 0, 0, 1, -ox, -oy);
     mctx.imageSmoothingEnabled = false;
+    tctx.imageSmoothingEnabled = false;
     mctx.clearRect(ox, oy, cols, linhas);
+    tctx.clearRect(ox, oy, cols, linhas);
     objQ = [];
+    topQ = [];
     dbgQ = [];
     // span = andares acima do chao. Os telhados desses andares sao desenhados
     // deslocados pra cima-esquerda, entao iteramos tiles EXTRAS a baixo-direita
@@ -557,6 +594,11 @@ function desenhar(agora) {
           if (z < GZ && esconder.has(chave3(x, y, z))) continue; // telhado do predio da sonda
           desenharTile(t, agora, depurar);
         }
+    // a fila do andar de cima, ordenada e desenhada no proprio offscreen. Fica
+    // DENTRO do bloco de cache: e' recalculada junto com o resto, no mesmo ritmo.
+    topQ.sort((a, b) => (a.ty + a.p) - (b.ty + b.p));
+    for (const it of topQ) blit(it.id, it.tx, it.ty, it.tz, it.ex, agora, false, tctx);
+
     chaveCache = chave;
     mapOx = ox;
     mapOy = oy;
@@ -577,6 +619,15 @@ function desenhar(agora) {
   for (const it of objQ) fila.push({ y: it.ty + it.p, fn: () => blitTela(it.id, it.tx, it.ty, it.tz, it.ex, agora) });
   if ($('c-sonda').checked) fila.push({ y: fy + P_SONDA, fn: () => desenharSonda(fx, fy) });
   fila.sort((a, b) => a.y - b.y).forEach((r) => r.fn());
+
+  // ── FASE 3.5: o andar de cima, POR CIMA da fila ──
+  // E o oposto proposital da FASE 2. Aqui o predio ganha a disputa contra o
+  // personagem: quem passa atras de uma parede some, e o telhado cobre o interior
+  // quando visto de fora. Os telhados do predio da sonda ja ficaram de fora, porque
+  // o loop que monta o topCv pula esses tiles (mesmo filtro de telhadosEscondidos).
+  ctx.imageSmoothingEnabled = true;
+  ctx.drawImage(topCv, mapOx, mapOy);
+  ctx.imageSmoothingEnabled = false;
 
   // ── overlays de depuracao ──
   if (depurar) desenharOverlayItens();
@@ -760,6 +811,32 @@ function carregarPropostas() {
     propostas = new Map(JSON.parse(localStorage.getItem(CHAVE_LS) || '[]'));
   } catch { propostas = new Map(); }
 }
+// Carrega um propostas.json de fora. Sem isto so da pra montar proposta clicando
+// tile a tile, e a lista boa tem 1.167 ids — inviavel na mao.
+// Aceita os dois formatos: {mudancas:[{id,para}]} e o par [[id,para],...] do
+// proprio "Baixar propostas.json".
+function aplicarArquivoPropostas(txt) {
+  let dados;
+  try { dados = JSON.parse(txt); } catch { alert('Arquivo nao e JSON valido.'); return; }
+  const novas = new Map();
+  if (Array.isArray(dados) && Array.isArray(dados[0])) {
+    for (const [id, para] of dados) novas.set(Number(id), para);
+  } else if (dados && Array.isArray(dados.mudancas)) {
+    for (const m of dados.mudancas) novas.set(Number(m.id), m.para || m.to);
+  } else if (dados && typeof dados === 'object') {
+    for (const [id, para] of Object.entries(dados)) if (typeof para === 'string') novas.set(Number(id), para);
+  }
+  if (!novas.size) { alert('Nao achei propostas nesse arquivo.'); return; }
+  propostas = novas;
+  salvarPropostas();
+  recalcularConjuntos();
+  renderPropostas();
+  const porDestino = {};
+  for (const v of propostas.values()) porDestino[v] = (porDestino[v] || 0) + 1;
+  alert(propostas.size + ' propostas carregadas: ' +
+    Object.entries(porDestino).map(([k, n]) => n + ' -> ' + k).join(', '));
+}
+
 function salvarPropostas() {
   localStorage.setItem(CHAVE_LS, JSON.stringify([...propostas]));
 }
@@ -913,6 +990,15 @@ function ligarEventos() {
         1
       )
     );
+  };
+  $('btn-carregar').onclick = () => $('arq-propostas').click();
+  $('arq-propostas').onchange = (ev) => {
+    const f = ev.target.files[0];
+    if (!f) return;
+    const fr = new FileReader();
+    fr.onload = () => aplicarArquivoPropostas(fr.result);
+    fr.readAsText(f);
+    ev.target.value = '';
   };
   $('btn-limpar').onclick = () => {
     if (propostas.size && !confirm(`Apagar as ${propostas.size} propostas?`)) return;

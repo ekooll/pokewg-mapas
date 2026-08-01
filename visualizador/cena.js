@@ -214,8 +214,20 @@ export function adotarMapa(slug, mp) {
 }
 
 /**
- * Reconstrói os índices a partir de `cena.mapa.tiles`. É a única porta de
- * entrada depois de uma edição: mexeu no tile, chame isto (ou `tocarTile`).
+ * Tile sem chão e sem pilha. NÃO É LIXO, e não pode ser jogado fora: 54 dos 330
+ * mapas publicados têm tiles assim (o `rotom` tem 2.849), e eles significam
+ * alguma coisa — "tile vazio" é ANDÁVEL, "tile nenhum" é bloqueado (`solido()`
+ * devolve true quando não acha tile). Apagá-los muda a colisão do mapa.
+ *
+ * Isto aqui é medição, não teoria: a primeira versão desta função compactava a
+ * lista, e a prova de desenho acusou 3 mapas divergindo — o boneco nascia em
+ * outro lugar porque o chão onde ele pisava tinha virado buraco.
+ */
+export const tileVazio = (t) => !t[3] && !(t[4] || []).length;
+
+/**
+ * Reconstrói os índices a partir de `cena.mapa.tiles`. Depois de mexer em UM
+ * tile, prefira `tocarTile` — isto varre o mapa inteiro.
  */
 export function reindexar() {
   const mp = cena.mapa;
@@ -232,11 +244,16 @@ export function reindexar() {
   }
   cena.minZ = Math.min(...zs);
   cena.maxZ = Math.max(...zs);
+  reconstruirSombra();
+  invalidar();
+}
 
-  // shadowMap do floor-cover: um telhado em z<GZ e desenhado deslocado (GZ-z) tiles
-  // pra cima-esquerda, entao ele "cobre" o chao em (x-(GZ-z), y-(GZ-z)).
+// shadowMap do floor-cover: um telhado em z<GZ e desenhado deslocado (GZ-z) tiles
+// pra cima-esquerda, entao ele "cobre" o chao em (x-(GZ-z), y-(GZ-z)).
+let sombraSuja = false;
+function reconstruirSombra() {
   cena.shadowMap = new Map();
-  for (const t of mp.tiles) {
+  for (const t of cena.mapa.tiles) {
     const z = t[2];
     if (z < cena.GZ && t[3]) {
       const k = t[0] - (cena.GZ - z) + ',' + (t[1] - (cena.GZ - z));
@@ -245,8 +262,55 @@ export function reindexar() {
       a.push(t);
     }
   }
+  sombraSuja = false;
   esconderCache = { x: NaN, y: NaN, ligado: null, set: new Set() };
+}
+
+// ── EDIÇÃO ────────────────────────────────────────────────────────────────
+// O editor mexe direto em `cena.mapa.tiles` (é o próprio arquivo do jogo em
+// memória) e avisa por aqui. Cada função abaixo mantém o índice em dia sem
+// varrer o mapa inteiro — varrer 92 mil tiles a cada pincelada travaria o
+// arrasto.
+
+/** O tile em (x,y,z). Com `criar`, nasce um vazio e entra no mapa. */
+export function tileEm(x, y, z, criar = false) {
+  const k = chave3(x, y, z);
+  let t = cena.tileAt.get(k);
+  if (!t && criar) {
+    t = [x, y, z, 0, []];
+    cena.mapa.tiles.push(t);
+    cena.tileAt.set(k, t);
+    anotarLimites(t);
+  }
+  return t;
+}
+
+function anotarLimites(t) {
+  if (t[0] < cena.minX) cena.minX = t[0];
+  if (t[1] < cena.minY) cena.minY = t[1];
+  if (t[0] > cena.maxX) cena.maxX = t[0];
+  if (t[1] > cena.maxY) cena.maxY = t[1];
+  if (t[2] < cena.minZ) cena.minZ = t[2];
+  if (t[2] > cena.maxZ) cena.maxZ = t[2];
+}
+
+/**
+ * Avisa que ESTE tile mudou. Chame depois de mexer no chão ou na pilha.
+ * O tile CONTINUA no índice mesmo vazio — ver `tileVazio()`: esvaziar um tile
+ * não é o mesmo que apagá-lo, e o jogo faz essa distinção.
+ */
+export function tocarTile(t) {
+  cena.tileAt.set(chave3(t[0], t[1], t[2]), t);
+  anotarLimites(t);
+  // telhado mexido = a sombra do floor-cover mudou. Reconstruir aqui seria
+  // varrer o mapa por pincelada; marca e reconstrói na hora de usar.
+  if (t[2] < cena.GZ) sombraSuja = true;
   invalidar();
+}
+
+/** O mapa pronto pra gravar, com a contagem de tiles em dia. */
+export function mapaParaGravar() {
+  return { ...cena.mapa, _meta: { ...cena.mapa._meta, tileCount: cena.mapa.tiles.length } };
 }
 
 // pre-carrega as paginas de atlas usadas por este mapa (senao os tiles "piscam")
@@ -305,6 +369,7 @@ export function solido(x, y) {
 // telhados a esconder: SO os do predio em que o ator esta (flood-fill da sombra
 // conectada). Vazio = nao esconde nada (ator na rua).
 export function telhadosEscondidos(px, py, ligado = true) {
+  if (sombraSuja) reconstruirSombra();   // alguém editou telhado desde a última vez
   if (esconderCache.x === px && esconderCache.y === py && esconderCache.ligado === ligado) return esconderCache.set;
   const esconder = new Set();
   if (!cena.NOCOVER && ligado && cena.shadowMap.has(px + ',' + py)) {
@@ -348,8 +413,18 @@ export function retangulo(id, tx, ty, tz, ex) {
   };
 }
 
+// PARADO = todo mundo no quadro 0. Não é economia à toa: com animação ligada, a
+// chave do cache dos andares carrega a faixa de tempo, então o mapa inteiro se
+// reconstrói 4x por segundo mesmo com a câmera imóvel. Medido no cerulean
+// (92.355 tiles, 12 andares, tela 1920x911): 51 ms para reconstruir contra 1 ms
+// para recolar o que já está pronto. Num visualizador isso é a água correndo;
+// numa ferramenta de montagem é um engasgo de 51 ms quatro vezes por segundo,
+// e quem monta tile a tile sente. O quadro 0 é o mesmo que o gerador emite e o
+// mesmo da folha de contato.
+let animando = true;
+
 function quadro(a, agora, congelar) {
-  return !congelar && a.frameCount > 1
+  return !congelar && animando && a.frameCount > 1
     ? a.frames[Math.floor(agora / (a.frameDurationMs || 500)) % a.frameCount]
     : a.frames[0];
 }
@@ -488,6 +563,10 @@ export function desenharCena(ctx, tela, agora, op) {
   const esconder = op.esconder || new Set();
   const depurar = !!op.depurar;
   const andarVisivel = op.andarVisivel || (() => true);
+  // `animar: false` congela toda peça no quadro 0 e tira o tempo da chave do
+  // cache — ver o comentário em quadro(). O visualizador não passa nada: anima.
+  const animarAgora = op.animar !== false;
+  if (animarAgora !== animando) { animando = animarAgora; chaveCache = ''; }
 
   const vx0 = Math.floor(camX / TILE) - 2, vx1 = Math.ceil((camX + tela.width / escala) / TILE) + 2;
   const vy0 = Math.floor(camY / TILE) - 2, vy1 = Math.ceil((camY + tela.height / escala) / TILE) + 4;
@@ -500,7 +579,7 @@ export function desenharCena(ctx, tela, agora, op) {
   // ── FASE 1: um canvas por andar (escala 1, nitido) — so quando precisa ──
   const ox = vx0 * TILE, oy = vy0 * TILE;
   const cols = (vx1 - vx0 + 1) * TILE, linhas = (vy1 - vy0 + 1) * TILE;
-  const chave = [vx0, vy0, vx1, vy1, op.chaveExtra ?? '', Math.floor(agora / 250), depurar].join(',');
+  const chave = [vx0, vy0, vx1, vy1, op.chaveExtra ?? '', animarAgora ? Math.floor(agora / 250) : 'parado', depurar].join(',');
   if (chave !== chaveCache) {
     for (const cv of [mapCv, topCv]) {
       if (cv.width !== cols) cv.width = cols;

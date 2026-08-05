@@ -100,6 +100,31 @@
   "noFloorCover": false
  },
  {
+  "slug": "aipom",
+  "bytes": 394104,
+  "format": "stonegy-map-compact-v1",
+  "tiles": 15345,
+  "groundZ": 7,
+  "walk": [
+   -37,
+   -20,
+   37,
+   20
+  ],
+  "center": [
+   3887,
+   6287
+  ],
+  "range": [
+   3850,
+   6267,
+   3924,
+   6307,
+   7
+  ],
+  "noFloorCover": false
+ },
+ {
   "slug": "alakazam",
   "bytes": 514048,
   "format": "stonegy-map-compact-v1",
@@ -595,6 +620,31 @@
    3956,
    3786,
    3991,
+   7
+  ],
+  "noFloorCover": false
+ },
+ {
+  "slug": "ariados",
+  "bytes": 363465,
+  "format": "stonegy-map-compact-v1",
+  "tiles": 12906,
+  "groundZ": 7,
+  "walk": [
+   -25,
+   -14,
+   26,
+   14
+  ],
+  "center": [
+   3926,
+   6202
+  ],
+  "range": [
+   3901,
+   6188,
+   3952,
+   6216,
    7
   ],
   "noFloorCover": false
@@ -1294,6 +1344,56 @@
   "noFloorCover": false
  },
  {
+  "slug": "casa-09",
+  "bytes": 10804,
+  "format": "stonegy-map-compact-v1",
+  "tiles": 524,
+  "groundZ": 7,
+  "walk": [
+   -9,
+   -11,
+   7,
+   9
+  ],
+  "center": [
+   0,
+   0
+  ],
+  "range": [
+   -9,
+   -11,
+   7,
+   9,
+   7
+  ],
+  "noFloorCover": false
+ },
+ {
+  "slug": "casa-kit",
+  "bytes": 7141,
+  "format": "stonegy-map-compact-v1",
+  "tiles": 389,
+  "groundZ": 7,
+  "walk": [
+   -10,
+   -9,
+   9,
+   7
+  ],
+  "center": [
+   0,
+   0
+  ],
+  "range": [
+   -10,
+   -9,
+   9,
+   7,
+   7
+  ],
+  "noFloorCover": false
+ },
+ {
   "slug": "cassino",
   "bytes": 539189,
   "format": "stonegy-map-compact-v1",
@@ -1365,6 +1465,31 @@
    4119,
    3523,
    7
+  ],
+  "noFloorCover": false
+ },
+ {
+  "slug": "chansey",
+  "bytes": 774045,
+  "format": "stonegy-map-compact-v1",
+  "tiles": 27507,
+  "groundZ": 6,
+  "walk": [
+   -32,
+   -17,
+   33,
+   17
+  ],
+  "center": [
+   4037,
+   3916
+  ],
+  "range": [
+   4005,
+   3899,
+   4070,
+   3933,
+   6
   ],
   "noFloorCover": false
  },
@@ -1569,6 +1694,31 @@
   "noFloorCover": false
  },
  {
+  "slug": "cidade-01",
+  "bytes": 283258,
+  "format": "stonegy-map-compact-v1",
+  "tiles": 13266,
+  "groundZ": 7,
+  "walk": [
+   -31,
+   -26,
+   29,
+   24
+  ],
+  "center": [
+   0,
+   0
+  ],
+  "range": [
+   -44,
+   -38,
+   42,
+   36,
+   7
+  ],
+  "noFloorCover": false
+ },
+ {
   "slug": "claydol",
   "bytes": 509053,
   "format": "stonegy-map-compact-v1",
@@ -1690,6 +1840,31 @@
    4028,
    4152,
    3
+  ],
+  "noFloorCover": false
+ },
+ {
+  "slug": "corsola",
+  "bytes": 543618,
+  "format": "stonegy-map-compact-v1",
+  "tiles": 20220,
+  "groundZ": 7,
+  "walk": [
+   -39,
+   -20,
+   40,
+   21
+  ],
+  "center": [
+   4317,
+   3334
+  ],
+  "range": [
+   4278,
+   3314,
+   4357,
+   3355,
+   7
   ],
   "noFloorCover": false
  },
@@ -1909,6 +2084,31 @@
    2846,
    3309,
    6
+  ],
+  "noFloorCover": false
+ },
+ {
+  "slug": "delibird",
+  "bytes": 917897,
+  "format": "stonegy-map-compact-v1",
+  "tiles": 34206,
+  "groundZ": 7,
+  "walk": [
+   -43,
+   -23,
+   44,
+   23
+  ],
+  "center": [
+   3954,
+   4110
+  ],
+  "range": [
+   3911,
+   4087,
+   3998,
+   4133,
+   7
   ],
   "noFloorCover": false
  },
@@ -2914,6 +3114,31 @@
   "noFloorCover": false
  },
  {
+  "slug": "furret",
+  "bytes": 627061,
+  "format": "stonegy-map-compact-v1",
+  "tiles": 21994,
+  "groundZ": 6,
+  "walk": [
+   -32,
+   -19,
+   33,
+   19
+  ],
+  "center": [
+   4026,
+   4894
+  ],
+  "range": [
+   3994,
+   4875,
+   4059,
+   4913,
+   6
+  ],
+  "noFloorCover": false
+ },
+ {
   "slug": "gallade",
   "bytes": 279610,
   "format": "stonegy-map-compact-v1",
@@ -3160,6 +3385,31 @@
    3817,
    3502,
    6
+  ],
+  "noFloorCover": false
+ },
+ {
+  "slug": "goldeen",
+  "bytes": 543618,
+  "format": "stonegy-map-compact-v1",
+  "tiles": 20220,
+  "groundZ": 7,
+  "walk": [
+   -39,
+   -20,
+   40,
+   21
+  ],
+  "center": [
+   4317,
+   3334
+  ],
+  "range": [
+   4278,
+   3314,
+   4357,
+   3355,
+   7
   ],
   "noFloorCover": false
  },
@@ -3614,6 +3864,31 @@
   "noFloorCover": false
  },
  {
+  "slug": "hoothoot",
+  "bytes": 514438,
+  "format": "stonegy-map-compact-v1",
+  "tiles": 19214,
+  "groundZ": 6,
+  "walk": [
+   -32,
+   -17,
+   33,
+   18
+  ],
+  "center": [
+   3378,
+   5802
+  ],
+  "range": [
+   3346,
+   5785,
+   3411,
+   5820,
+   6
+  ],
+  "noFloorCover": false
+ },
+ {
   "slug": "hoppip",
   "bytes": 136963,
   "format": null,
@@ -3630,6 +3905,31 @@
    32
   ],
   "range": null,
+  "noFloorCover": false
+ },
+ {
+  "slug": "horsea",
+  "bytes": 543618,
+  "format": "stonegy-map-compact-v1",
+  "tiles": 20220,
+  "groundZ": 7,
+  "walk": [
+   -39,
+   -20,
+   40,
+   21
+  ],
+  "center": [
+   4317,
+   3334
+  ],
+  "range": [
+   4278,
+   3314,
+   4357,
+   3355,
+   7
+  ],
   "noFloorCover": false
  },
  {
@@ -4142,6 +4442,31 @@
    3736,
    4695,
    5
+  ],
+  "noFloorCover": false
+ },
+ {
+  "slug": "ledian",
+  "bytes": 363465,
+  "format": "stonegy-map-compact-v1",
+  "tiles": 12906,
+  "groundZ": 7,
+  "walk": [
+   -25,
+   -14,
+   26,
+   14
+  ],
+  "center": [
+   3926,
+   6202
+  ],
+  "range": [
+   3901,
+   6188,
+   3952,
+   6216,
+   7
   ],
   "noFloorCover": false
  },
@@ -5159,6 +5484,31 @@
   "noFloorCover": false
  },
  {
+  "slug": "octillery",
+  "bytes": 543618,
+  "format": "stonegy-map-compact-v1",
+  "tiles": 20220,
+  "groundZ": 7,
+  "walk": [
+   -39,
+   -20,
+   40,
+   21
+  ],
+  "center": [
+   4317,
+   3334
+  ],
+  "range": [
+   4278,
+   3314,
+   4357,
+   3355,
+   7
+  ],
+  "noFloorCover": false
+ },
+ {
   "slug": "oddish",
   "bytes": 541738,
   "format": "stonegy-map-compact-v1",
@@ -6028,6 +6378,31 @@
   "noFloorCover": false
  },
  {
+  "slug": "remoraid",
+  "bytes": 543618,
+  "format": "stonegy-map-compact-v1",
+  "tiles": 20220,
+  "groundZ": 7,
+  "walk": [
+   -39,
+   -20,
+   40,
+   21
+  ],
+  "center": [
+   4317,
+   3334
+  ],
+  "range": [
+   4278,
+   3314,
+   4357,
+   3355,
+   7
+  ],
+  "noFloorCover": false
+ },
+ {
   "slug": "rhydon",
   "bytes": 1607892,
   "format": "stonegy-map-compact-v1",
@@ -6341,6 +6716,31 @@
   "noFloorCover": false
  },
  {
+  "slug": "seaking",
+  "bytes": 543618,
+  "format": "stonegy-map-compact-v1",
+  "tiles": 20220,
+  "groundZ": 7,
+  "walk": [
+   -39,
+   -20,
+   40,
+   21
+  ],
+  "center": [
+   4317,
+   3334
+  ],
+  "range": [
+   4278,
+   3314,
+   4357,
+   3355,
+   7
+  ],
+  "noFloorCover": false
+ },
+ {
   "slug": "seel",
   "bytes": 512466,
   "format": "stonegy-map-compact-v1",
@@ -6362,6 +6762,31 @@
    4166,
    4061,
    7
+  ],
+  "noFloorCover": false
+ },
+ {
+  "slug": "sentret",
+  "bytes": 627061,
+  "format": "stonegy-map-compact-v1",
+  "tiles": 21994,
+  "groundZ": 6,
+  "walk": [
+   -32,
+   -19,
+   33,
+   19
+  ],
+  "center": [
+   4026,
+   4894
+  ],
+  "range": [
+   3994,
+   4875,
+   4059,
+   4913,
+   6
   ],
   "noFloorCover": false
  },
@@ -6462,6 +6887,31 @@
    3457,
    5826,
    5
+  ],
+  "noFloorCover": false
+ },
+ {
+  "slug": "skiploom",
+  "bytes": 717017,
+  "format": "stonegy-map-compact-v1",
+  "tiles": 24781,
+  "groundZ": 6,
+  "walk": [
+   -32,
+   -20,
+   33,
+   20
+  ],
+  "center": [
+   4101,
+   4507
+  ],
+  "range": [
+   4069,
+   4487,
+   4134,
+   4527,
+   6
   ],
   "noFloorCover": false
  },
@@ -6735,6 +7185,31 @@
   "noFloorCover": false
  },
  {
+  "slug": "spinarak",
+  "bytes": 363465,
+  "format": "stonegy-map-compact-v1",
+  "tiles": 12906,
+  "groundZ": 7,
+  "walk": [
+   -25,
+   -14,
+   26,
+   14
+  ],
+  "center": [
+   3926,
+   6202
+  ],
+  "range": [
+   3901,
+   6188,
+   3952,
+   6216,
+   7
+  ],
+  "noFloorCover": false
+ },
+ {
   "slug": "squirtle",
   "bytes": 326877,
   "format": "stonegy-map-compact-v1",
@@ -6756,6 +7231,31 @@
    4331,
    3402,
    7
+  ],
+  "noFloorCover": false
+ },
+ {
+  "slug": "stantler",
+  "bytes": 725553,
+  "format": "stonegy-map-compact-v1",
+  "tiles": 25529,
+  "groundZ": 6,
+  "walk": [
+   -37,
+   -19,
+   37,
+   20
+  ],
+  "center": [
+   4046,
+   4889
+  ],
+  "range": [
+   4009,
+   4870,
+   4083,
+   4909,
+   6
   ],
   "noFloorCover": false
  },
@@ -7125,6 +7625,56 @@
    4384,
    3752,
    8
+  ],
+  "noFloorCover": false
+ },
+ {
+  "slug": "togepi",
+  "bytes": 1232554,
+  "format": "stonegy-map-compact-v1",
+  "tiles": 43560,
+  "groundZ": 7,
+  "walk": [
+   -39,
+   -20,
+   39,
+   21
+  ],
+  "center": [
+   3831,
+   3480
+  ],
+  "range": [
+   3792,
+   3460,
+   3870,
+   3501,
+   7
+  ],
+  "noFloorCover": false
+ },
+ {
+  "slug": "togetic",
+  "bytes": 1232554,
+  "format": "stonegy-map-compact-v1",
+  "tiles": 43560,
+  "groundZ": 7,
+  "walk": [
+   -39,
+   -20,
+   39,
+   21
+  ],
+  "center": [
+   3831,
+   3480
+  ],
+  "range": [
+   3792,
+   3460,
+   3870,
+   3501,
+   7
   ],
   "noFloorCover": false
  },
@@ -7943,6 +8493,31 @@
    6273,
    3610,
    6315,
+   7
+  ],
+  "noFloorCover": false
+ },
+ {
+  "slug": "yanma",
+  "bytes": 363465,
+  "format": "stonegy-map-compact-v1",
+  "tiles": 12906,
+  "groundZ": 7,
+  "walk": [
+   -25,
+   -14,
+   26,
+   14
+  ],
+  "center": [
+   3926,
+   6202
+  ],
+  "range": [
+   3901,
+   6188,
+   3952,
+   6216,
    7
   ],
   "noFloorCover": false

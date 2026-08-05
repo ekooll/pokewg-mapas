@@ -532,7 +532,17 @@ function desenharTile(t, agora, depurar, dest) {
 
   emitirTile(t, cena.TABELA, (id, chao, p, ex, k) => {
     if (chao) {
-      blit(id, tx, ty, tz, ex, agora, true, dest);
+      // CHAO ANIMA IGUAL AO RESTO. Aqui passava `true` (congelar), e o motivo
+      // dado era o custo de reconstruir o mapa 4x por segundo. Esse motivo nao
+      // se sustenta: quando `animarAgora` esta ligado, a chave do cache (busca
+      // por "Math.floor(agora / 250)") JA muda a cada 250 ms por causa da banda
+      // item, e o mapa JA e reconstruido. Congelar o chao nao economizava nada —
+      // so impedia o chao de andar. Com `animar:false` (o padrao das ferramentas)
+      // nada disso roda e o custo continua zero, porque `quadro()` ja devolve o
+      // frame 0 pelo `animando`.
+      // O que isso destrava: fundo de mar, agua e lava de PISO. Medido na arena
+      // do Tentacruel (PIW cruel_boss): 160 tiles de chao com 5 quadros reais.
+      blit(id, tx, ty, tz, ex, agora, false, dest);
       if (depurar) dbgQ.push({ id, tx, ty, tz, ex, banda: 'chao' });
     } else {
       fila.push({ k, id, tx, ty, tz, ex });

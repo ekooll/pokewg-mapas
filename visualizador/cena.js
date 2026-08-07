@@ -423,10 +423,32 @@ export function retangulo(id, tx, ty, tz, ex) {
 // mesmo da folha de contato.
 let animando = true;
 
+// ── DOIS INTERRUPTORES, NÃO UM ────────────────────────────────────────────
+// Pedido do Ekoo (06/08/2026): "um botão que dê movimento aos tiles de parede,
+// objetos, fogo, água, e um botão para o chão — no caso o único movimento de
+// chão que eu quero é do oceano, mar".
+//
+// Antes era um booleano só. Ligado, TODO chão animado se mexia: lava (598-601),
+// pântano (4691-4701) e o chão verde escuro (21109-21114) — que quem monta mapa
+// não quer ver tremendo. Só o mar (4820-4825, 14 quadros) deve andar.
+//
+// `animaChao` liga a banda CHÃO; `chaoPermitido` (Set de ids, ou null pra
+// todos) restringe QUAIS chãos podem andar. A LISTA NÃO MORA AQUI: quem chama
+// passa. O motor não carrega conhecimento de conteúdo do jogo.
+let animaPecas = true;
+let animaChao = true;
+let chaoPermitido = null;
+
 function quadro(a, agora, congelar) {
   return !congelar && animando && a.frameCount > 1
     ? a.frames[Math.floor(agora / (a.frameDurationMs || 500)) % a.frameCount]
     : a.frames[0];
+}
+
+// congelar ESTE chão? Só anda se a banda chão estiver ligada e, havendo lista,
+// se o id estiver nela.
+function chaoCongelado(id) {
+  return !animaChao || (chaoPermitido !== null && !chaoPermitido.has(id));
 }
 
 // desenha no CANVAS DO ANDAR. `destino` e o contexto do andar do tile — quem
@@ -448,7 +470,7 @@ function blitTela(ctx, id, tx, ty, tz, ex, agora) {
   if (!id || IGNORE.has(id)) return;
   const a = cena.assets[id];
   if (!a) return;
-  const f = quadro(a, agora, false);
+  const f = quadro(a, agora, !animaPecas);
   const pg = cena.paginasImg.get(f.page);
   if (!pg) return;
   const r = retangulo(id, tx, ty, tz, ex);
@@ -542,7 +564,10 @@ function desenharTile(t, agora, depurar, dest) {
       // frame 0 pelo `animando`.
       // O que isso destrava: fundo de mar, agua e lava de PISO. Medido na arena
       // do Tentacruel (PIW cruel_boss): 160 tiles de chao com 5 quadros reais.
-      blit(id, tx, ty, tz, ex, agora, false, dest);
+      // Desde 06/08/2026 o chao tem interruptor PROPRIO e lista propria — ver
+      // chaoCongelado(). Passar `false` fixo aqui fazia lava e pantano andarem
+      // junto com o mar, que e' o que o Ekoo nao quer ver enquanto monta.
+      blit(id, tx, ty, tz, ex, agora, chaoCongelado(id), dest);
       if (depurar) dbgQ.push({ id, tx, ty, tz, ex, banda: 'chao' });
     } else {
       fila.push({ k, id, tx, ty, tz, ex });
@@ -573,10 +598,25 @@ export function desenharCena(ctx, tela, agora, op) {
   const esconder = op.esconder || new Set();
   const depurar = !!op.depurar;
   const andarVisivel = op.andarVisivel || (() => true);
-  // `animar: false` congela toda peça no quadro 0 e tira o tempo da chave do
-  // cache — ver o comentário em quadro(). O visualizador não passa nada: anima.
-  const animarAgora = op.animar !== false;
-  if (animarAgora !== animando) { animando = animarAgora; chaveCache = ''; }
+  // `animar` aceita três formas, e as duas antigas continuam valendo:
+  //   true  / ausente  → tudo anima (o visualizador não passa nada)
+  //   false            → nada anima: quadro 0 e tempo fora da chave do cache
+  //   { pecas, chao }  → um interruptor por banda. `chao` pode ser `true`,
+  //                      `false`, ou uma LISTA de ids que podem andar — é assim
+  //                      que o editor deixa só o mar se mexer.
+  const a = op.animar;
+  const obj = a !== null && typeof a === 'object';
+  const pecasOn = obj ? a.pecas !== false : a !== false;
+  const chaoOn = obj ? a.chao !== false : a !== false;
+  const lista = obj && Array.isArray(a.chao) ? new Set(a.chao) : (obj && a.chao instanceof Set ? a.chao : null);
+  // `animando` é o interruptor GERAL do quadro(): se nenhuma banda anima, nada
+  // anima e o tempo sai da chave do cache — o caminho barato de sempre.
+  const animarAgora = pecasOn || chaoOn;
+  const mudou = animarAgora !== animando || pecasOn !== animaPecas || chaoOn !== animaChao ||
+    (lista === null) !== (chaoPermitido === null) ||
+    (lista !== null && chaoPermitido !== null && lista.size !== chaoPermitido.size);
+  animando = animarAgora; animaPecas = pecasOn; animaChao = chaoOn; chaoPermitido = lista;
+  if (mudou) chaveCache = '';
 
   const vx0 = Math.floor(camX / TILE) - 2, vx1 = Math.ceil((camX + tela.width / escala) / TILE) + 2;
   const vy0 = Math.floor(camY / TILE) - 2, vy1 = Math.ceil((camY + tela.height / escala) / TILE) + 4;
@@ -629,7 +669,7 @@ export function desenharCena(ctx, tela, agora, op) {
       const lista = itemQ.get(z);
       if (!lista) continue;
       lista.sort((a, b) => a.k - b.k);
-      for (const it of lista) blit(it.id, it.tx, it.ty, it.tz, it.ex, agora, false, dest);
+      for (const it of lista) blit(it.id, it.tx, it.ty, it.tz, it.ex, agora, !animaPecas, dest);
     }
 
     chaveCache = chave;

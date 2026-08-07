@@ -1,0 +1,565 @@
+{
+  "_o_que_e": "quais CHÃOS podem se mexer quando o botão \"Animar chão\" do editor está ligado.",
+  "_porque": "Pedido do Ekoo em 06/08/2026: \"o único movimento de chão que eu quero é do oceano, mar\". Antes o motor animava TODO chão animado junto — lava, pântano e chão verde escuro tremiam enquanto ele montava. Esta lista é o filtro, e mora aqui e não no motor: o motor não deve carregar conhecimento de conteúdo do jogo.",
+  "_medido_em": "2026-08-06",
+  "_como_medi": "varredura do manifest por isGround + animação real (animLen quando existe, senão frameCount) = 92 chãos animados no atlas; uso contado nos 353 mapas publicados.",
+  "_como_usa": "editor/editor.js lê este arquivo e passa os ids em `animar.chao` para desenharCena().",
+  "anima": [
+    {
+      "id": 23673,
+      "quadros": 5,
+      "usos": 1021,
+      "nome": "FUNDO DO MAR — o piso inteiro (pat2x2, 5 quadros)"
+    },
+    {
+      "id": 25055,
+      "quadros": 5,
+      "usos": 214,
+      "nome": "fundo do mar — kit de borda, variante"
+    },
+    {
+      "id": 25056,
+      "quadros": 5,
+      "usos": 252,
+      "nome": "piso azul-esverdeado manchado (água rasa ou pedra amolgada — não confirmado), padrão 2x2"
+    },
+    {
+      "id": 25057,
+      "quadros": 5,
+      "usos": 879,
+      "nome": "fundo do mar — kit de borda, variante"
+    },
+    {
+      "id": 25058,
+      "quadros": 5,
+      "usos": 810,
+      "nome": "fundo do mar — kit de borda, variante"
+    },
+    {
+      "id": 25059,
+      "quadros": 5,
+      "usos": 881,
+      "nome": "fundo do mar — kit de borda"
+    },
+    {
+      "id": 25060,
+      "quadros": 5,
+      "usos": 1259,
+      "nome": "fundo do mar — kit de borda, variante"
+    }
+  ],
+  "nao_anima": [
+    {
+      "id": 399,
+      "quadros": 14,
+      "usos": 31,
+      "nome": "(SEM NOME)"
+    },
+    {
+      "id": 493,
+      "quadros": 3,
+      "usos": 36426,
+      "nome": "água clara, chão de lago/rio (padrão 2x2)"
+    },
+    {
+      "id": 598,
+      "quadros": 10,
+      "usos": 40430,
+      "nome": "lava"
+    },
+    {
+      "id": 599,
+      "quadros": 10,
+      "usos": 3660,
+      "nome": "chão terracota manchado alaranjado (padrão 2x2) — lava resfriada ou cerâmica?"
+    },
+    {
+      "id": 600,
+      "quadros": 10,
+      "usos": 3350,
+      "nome": "chão terracota manchado alaranjado, variante 2 (padrão 2x2)"
+    },
+    {
+      "id": 601,
+      "quadros": 10,
+      "usos": 3619,
+      "nome": "chão terracota manchado alaranjado, variante (padrão 2x2)"
+    },
+    {
+      "id": 2197,
+      "quadros": 6,
+      "usos": 149,
+      "nome": "piso ciano brilhante (padrão 2x2)"
+    },
+    {
+      "id": 2198,
+      "quadros": 6,
+      "usos": 42,
+      "nome": "(SEM NOME)"
+    },
+    {
+      "id": 2553,
+      "quadros": 14,
+      "usos": 4,
+      "nome": "(SEM NOME)"
+    },
+    {
+      "id": 2559,
+      "quadros": 14,
+      "usos": 1,
+      "nome": "(SEM NOME)"
+    },
+    {
+      "id": 3070,
+      "quadros": 6,
+      "usos": 3,
+      "nome": "(SEM NOME)"
+    },
+    {
+      "id": 3071,
+      "quadros": 6,
+      "usos": 226,
+      "nome": "quadro roxo brilhante sobre fundo escuro, padrão 2x2 (mesma família de 3072, possível efeito de teleporte/portal)"
+    },
+    {
+      "id": 3072,
+      "quadros": 6,
+      "usos": 525,
+      "nome": "quadro verde brilhante sobre fundo escuro (chão, padrão 2x2, 24 quadros — parece efeito de teleporte/portal)"
+    },
+    {
+      "id": 3076,
+      "quadros": 6,
+      "usos": 302,
+      "nome": "tubos de luz neon roxa (chão animado)"
+    },
+    {
+      "id": 4632,
+      "quadros": 14,
+      "usos": 1835,
+      "nome": "beira de praia — meia areia, meia água rasa (ANDÁVEL)"
+    },
+    {
+      "id": 4633,
+      "quadros": 14,
+      "usos": 1842,
+      "nome": "beira de praia — areia molhada com brilho (ANDÁVEL)"
+    },
+    {
+      "id": 4634,
+      "quadros": 14,
+      "usos": 1656,
+      "nome": "água rasa — variante animada (dá pra andar)"
+    },
+    {
+      "id": 4635,
+      "quadros": 14,
+      "usos": 1418,
+      "nome": "água rasa (dá pra andar), variante"
+    },
+    {
+      "id": 4636,
+      "quadros": 14,
+      "usos": 966,
+      "nome": "água rasa (dá pra andar)"
+    },
+    {
+      "id": 4637,
+      "quadros": 14,
+      "usos": 1140,
+      "nome": "água rasa (dá pra andar) — variante de borda diagonal"
+    },
+    {
+      "id": 4638,
+      "quadros": 14,
+      "usos": 1071,
+      "nome": "água rasa (dá pra andar) — variante de borda diagonal"
+    },
+    {
+      "id": 4639,
+      "quadros": 14,
+      "usos": 1182,
+      "nome": "água rasa (dá pra andar)"
+    },
+    {
+      "id": 4640,
+      "quadros": 14,
+      "usos": 1011,
+      "nome": "água rasa (dá pra andar) — variante de borda diagonal"
+    },
+    {
+      "id": 4641,
+      "quadros": 14,
+      "usos": 1197,
+      "nome": "água rasa transitável, borda diagonal com areia (chão animado)"
+    },
+    {
+      "id": 4642,
+      "quadros": 14,
+      "usos": 1139,
+      "nome": "areia clara — variante seca da série água rasa (anim)"
+    },
+    {
+      "id": 4643,
+      "quadros": 14,
+      "usos": 1229,
+      "nome": "água rasa (dá pra andar) — variante de borda diagonal"
+    },
+    {
+      "id": 4691,
+      "quadros": 6,
+      "usos": 12191,
+      "nome": "piso verde-amarelado (musgo/pântano?)"
+    },
+    {
+      "id": 4692,
+      "quadros": 6,
+      "usos": 1800,
+      "nome": "chão verde-amarelado sólido (tom seco), com padrão, variante 6"
+    },
+    {
+      "id": 4693,
+      "quadros": 6,
+      "usos": 1746,
+      "nome": "chão verde-amarelado sólido (tom seco), com padrão, variante 10"
+    },
+    {
+      "id": 4694,
+      "quadros": 6,
+      "usos": 1854,
+      "nome": "chão verde-amarelado sólido (tom seco), com padrão, variante 2"
+    },
+    {
+      "id": 4695,
+      "quadros": 6,
+      "usos": 1815,
+      "nome": "chão verde-amarelado sólido (tom seco), com padrão, variante 7"
+    },
+    {
+      "id": 4696,
+      "quadros": 6,
+      "usos": 1745,
+      "nome": "chão verde-amarelado sólido (tom seco), com padrão, variante 9"
+    },
+    {
+      "id": 4698,
+      "quadros": 6,
+      "usos": 1901,
+      "nome": "chão verde-amarelado sólido (tom seco), com padrão, variante"
+    },
+    {
+      "id": 4699,
+      "quadros": 6,
+      "usos": 1916,
+      "nome": "chão verde-amarelado sólido (tom seco), com padrão"
+    },
+    {
+      "id": 4700,
+      "quadros": 6,
+      "usos": 1843,
+      "nome": "chão verde-amarelado sólido (tom seco), com padrão, variante 4"
+    },
+    {
+      "id": 4701,
+      "quadros": 6,
+      "usos": 1874,
+      "nome": "chão verde-amarelado sólido (tom seco), com padrão, variante 3"
+    },
+    {
+      "id": 4702,
+      "quadros": 6,
+      "usos": 4,
+      "nome": "(SEM NOME)"
+    },
+    {
+      "id": 4703,
+      "quadros": 6,
+      "usos": 3,
+      "nome": "piso verde-amarelado texturizado (padrão 2x1)"
+    },
+    {
+      "id": 4704,
+      "quadros": 6,
+      "usos": 2,
+      "nome": "(SEM NOME)"
+    },
+    {
+      "id": 4705,
+      "quadros": 6,
+      "usos": 1,
+      "nome": "(SEM NOME)"
+    },
+    {
+      "id": 4706,
+      "quadros": 6,
+      "usos": 1,
+      "nome": "(SEM NOME)"
+    },
+    {
+      "id": 4707,
+      "quadros": 6,
+      "usos": 1,
+      "nome": "(SEM NOME)"
+    },
+    {
+      "id": 4708,
+      "quadros": 6,
+      "usos": 1,
+      "nome": "piso verde-amarelado texturizado, variante (padrão 2x1)"
+    },
+    {
+      "id": 4709,
+      "quadros": 6,
+      "usos": 1,
+      "nome": "(SEM NOME)"
+    },
+    {
+      "id": 4749,
+      "quadros": 6,
+      "usos": 1691,
+      "nome": "chão verde-amarelado sólido (tom seco), com padrão, variante 11"
+    },
+    {
+      "id": 4750,
+      "quadros": 6,
+      "usos": 1653,
+      "nome": "chão verde-amarelado sólido (tom seco), com padrão, variante 12"
+    },
+    {
+      "id": 4751,
+      "quadros": 6,
+      "usos": 1823,
+      "nome": "chão verde-amarelado sólido (tom seco), com padrão, variante 5"
+    },
+    {
+      "id": 4752,
+      "quadros": 6,
+      "usos": 1806,
+      "nome": "chão verde-amarelado sólido (tom seco), com padrão, variante 8"
+    },
+    {
+      "id": 4753,
+      "quadros": 6,
+      "usos": 720,
+      "nome": "grama amarelo-esverdeada rica em variação (pat2x1, 12 frames)"
+    },
+    {
+      "id": 4754,
+      "quadros": 6,
+      "usos": 659,
+      "nome": "chão verde-limão vibrante, liso (variante do 4755, padrão 2x1)"
+    },
+    {
+      "id": 4755,
+      "quadros": 6,
+      "usos": 666,
+      "nome": "chão verde-limão vibrante, liso (tipo de terreno não identificado, padrão 2x1)"
+    },
+    {
+      "id": 4820,
+      "quadros": 14,
+      "usos": 268807,
+      "nome": "água do mar — BLOQUEIA (mar aberto, não é a água andável)"
+    },
+    {
+      "id": 4821,
+      "quadros": 14,
+      "usos": 86785,
+      "nome": "água do mar — BLOQUEIA, variante 1"
+    },
+    {
+      "id": 4822,
+      "quadros": 14,
+      "usos": 87100,
+      "nome": "água do mar — BLOQUEIA, variante 2"
+    },
+    {
+      "id": 4823,
+      "quadros": 14,
+      "usos": 86867,
+      "nome": "água do mar — BLOQUEIA, variante 3"
+    },
+    {
+      "id": 4824,
+      "quadros": 14,
+      "usos": 86599,
+      "nome": "água do mar — BLOQUEIA, variante 4"
+    },
+    {
+      "id": 4825,
+      "quadros": 14,
+      "usos": 85921,
+      "nome": "água do mar — BLOQUEIA, variante 5"
+    },
+    {
+      "id": 6353,
+      "quadros": 6,
+      "usos": 602,
+      "nome": "chão verde-limão vibrante, liso (variante da família 4754/4755)"
+    },
+    {
+      "id": 11848,
+      "quadros": 2,
+      "usos": 2,
+      "nome": "(SEM NOME)"
+    },
+    {
+      "id": 16296,
+      "quadros": 10,
+      "usos": 40,
+      "nome": "(SEM NOME)"
+    },
+    {
+      "id": 17059,
+      "quadros": 14,
+      "usos": 4107,
+      "nome": "azul sólido animado, bloqueia — água"
+    },
+    {
+      "id": 18584,
+      "quadros": 14,
+      "usos": 80,
+      "nome": "quadrado azul sólido animado (14 frames, 150ms) — assinatura clássica de água em movimento; chão, mas bloqueia (água funda/intransponível)"
+    },
+    {
+      "id": 18585,
+      "quadros": 14,
+      "usos": 226,
+      "nome": "quadrado azul sólido — água (chão, bloqueia, animada 14 frames)"
+    },
+    {
+      "id": 18586,
+      "quadros": 14,
+      "usos": 101,
+      "nome": "(SEM NOME)"
+    },
+    {
+      "id": 18587,
+      "quadros": 14,
+      "usos": 115,
+      "nome": "água profunda azul, animada, bloqueia passagem"
+    },
+    {
+      "id": 18588,
+      "quadros": 14,
+      "usos": 174,
+      "nome": "quadrado azul sólido animado (14 frames, 150ms) — assinatura clássica de água em movimento; chão, mas bloqueia (água funda/intransponível)"
+    },
+    {
+      "id": 18589,
+      "quadros": 14,
+      "usos": 93,
+      "nome": "quadrado azul sólido — água, variante/frame do 18585"
+    },
+    {
+      "id": 18590,
+      "quadros": 14,
+      "usos": 112,
+      "nome": "(SEM NOME)"
+    },
+    {
+      "id": 18591,
+      "quadros": 14,
+      "usos": 278,
+      "nome": "água profunda azul, animada, bloqueia passagem"
+    },
+    {
+      "id": 18592,
+      "quadros": 14,
+      "usos": 113,
+      "nome": "água profunda azul, animada, bloqueia passagem"
+    },
+    {
+      "id": 18593,
+      "quadros": 14,
+      "usos": 127,
+      "nome": "água profunda azul, animada, bloqueia passagem"
+    },
+    {
+      "id": 18594,
+      "quadros": 14,
+      "usos": 71,
+      "nome": "quadrado azul sólido animado (14 frames, 150ms) — assinatura clássica de água em movimento; chão, mas bloqueia (água funda/intransponível)"
+    },
+    {
+      "id": 18595,
+      "quadros": 14,
+      "usos": 169,
+      "nome": "quadrado azul sólido — água, variante/frame do 18585"
+    },
+    {
+      "id": 21109,
+      "quadros": 14,
+      "usos": 3638,
+      "nome": "CHÃO QUE BLOQUEIA — piso pantanoso esverdeado escuro (animado)"
+    },
+    {
+      "id": 21110,
+      "quadros": 14,
+      "usos": 1262,
+      "nome": "chão verde escuro com mancha mais clara, animado, variante 3"
+    },
+    {
+      "id": 21111,
+      "quadros": 14,
+      "usos": 1326,
+      "nome": "chão verde escuro uniforme, animado — possível chão de floresta, variante 2"
+    },
+    {
+      "id": 21112,
+      "quadros": 14,
+      "usos": 1348,
+      "nome": "chão verde escuro com mancha mais clara, animado, variante"
+    },
+    {
+      "id": 21113,
+      "quadros": 14,
+      "usos": 1232,
+      "nome": "chão verde escuro com mancha mais clara, animado, variante 4"
+    },
+    {
+      "id": 21114,
+      "quadros": 14,
+      "usos": 1378,
+      "nome": "chão verde escuro com mancha mais clara, animado — possível chão de floresta"
+    },
+    {
+      "id": 27411,
+      "quadros": 4,
+      "usos": 308,
+      "nome": "água (chão animado)"
+    },
+    {
+      "id": 37864,
+      "quadros": 10,
+      "usos": 358,
+      "nome": "Grama/relvado — chão vivo com padrão 2x2 e 40 quadros de animação"
+    },
+    {
+      "id": 37866,
+      "quadros": 10,
+      "usos": 1,
+      "nome": "(SEM NOME)"
+    },
+    {
+      "id": 37867,
+      "quadros": 10,
+      "usos": 12,
+      "nome": "(SEM NOME)"
+    },
+    {
+      "id": 37869,
+      "quadros": 10,
+      "usos": 1,
+      "nome": "(SEM NOME)"
+    },
+    {
+      "id": 54670,
+      "quadros": 2,
+      "usos": 33,
+      "nome": "estante alta com itens (chão, animada)"
+    }
+  ],
+  "_correcao_06_08": "O Ekoo apontou: \"23673 é o chão que eu te disse que quero que se mova, tem animação, junto com o kit borda fundo do mar — porque o kit borda fundo do mar não contém o tile igual ao 23673, que é o piso inteiro\". Ele estava certo e a minha 1ª lista errou pelo motivo de sempre: filtrei por NOME. O 23673 está batizado no catálogo como \"grama densa com folhas (pat2x2)\", então \"água/mar/praia\" não pegava ele. Medido: é CHÃO andável com 5 quadros e pattern 2x2 — a mesma assinatura do kit 25055-25060 — e renderizado lado a lado com o kit é indistinguível: água ciano com padrão de ondas. O 23673 é o piso INTEIRO que falta no kit.",
+  "_regra": "SÓ o fundo do mar anda: o piso inteiro 23673 e o kit de borda 25055-25060. TODO o resto do chão fica no quadro 0 — inclusive a água do mar 4820-4825 e a beira de praia 4632-4655, que saíram daqui em 06/08/2026 a pedido do Ekoo: \"apenas esse tile de chão de mar é o que deve ter animação + o kit fundo de mar, o restante zero animação\"."
+}

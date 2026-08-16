@@ -77,20 +77,36 @@ async function main() {
   }
 
   // ── 1. mapas ───────────────────────────────────────────────────────────────
+  // UM SLUG QUE FALHA NAO DERRUBA O LOTE. O `dados/maps-index.json` e' um retrato:
+  // slug que saiu do ar depois dele (o `aipom`, por exemplo) devolve 404, e ate
+  // 15/08/2026 esse 404 matava o `--todos` inteiro no meio — 4 mapas de 357
+  // atualizados e o resto silenciosamente velho, que e' pior do que nao ter
+  // rodado. Agora a falha e' contada, o laco segue, e o resumo do fim diz quem
+  // ficou de fora: essa lista e' o que o indice tem e o servidor nao serve mais.
   let baixados = 0;
   let bytes = 0;
+  const falharam = [];
   for (const slug of slugs) {
     const destino = path.join(DIR_MAPA, slug + '.json');
     if (!FORCAR && fs.existsSync(destino)) {
       console.log(`· ${slug}.json ja existe (use --forcar pra rebaixar)`);
       continue;
     }
-    const n = await baixar(`${BASE}/map/${slug}.json`, destino);
-    baixados++;
-    bytes += n;
-    console.log(`✓ ${slug}.json  ${mb(n)}`);
+    try {
+      const n = await baixar(`${BASE}/map/${slug}.json`, destino);
+      baixados++;
+      bytes += n;
+      console.log(`✓ ${slug}.json  ${mb(n)}`);
+    } catch (e) {
+      falharam.push({ slug, erro: String(e.message || e) });
+      console.log(`✗ ${slug}.json  ${e.message || e}`);
+    }
   }
   if (slugs.length) console.log(`\n${baixados} mapa(s) baixado(s), ${mb(bytes)}\n`);
+  if (falharam.length) {
+    console.log(`⚠ ${falharam.length} slug(s) do indice NAO existem mais no servidor:`);
+    console.log('  ' + falharam.map((f) => f.slug).join(', ') + '\n');
+  }
 
   if (SEM_ATLAS) return;
 
